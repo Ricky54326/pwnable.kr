@@ -1,7 +1,41 @@
 # pwnable.kr
 pwnable.kr writeups as I go
 
+## fd
+"Mommy! What is a file descriptor in Linux?" 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+char buf[32];
+int main(int argc, char* argv[], char* envp[]){
+        if(argc<2){
+                printf("pass argv[1] a number\n");
+                return 0;
+        }
+        int fd = atoi( argv[1] ) - 0x1234;
+        int len = 0;
+        len = read(fd, buf, 32);
+        if(!strcmp("LETMEWIN\n", buf)){
+                printf("good job :)\n");
+                system("/bin/cat flag");
+                exit(0);
+        }
+        printf("learn about Linux file IO\n");
+        return 0;
 
+}
+```
+
+This simple program takes an integer passed in, subtracts 0x1234 from it (4660 decimal), and then tries to read 32 bytes from the file descriptor associated with the arg-0x1234. The easiest way I could think to solve this is just to make fd-4663 == 0 (`fd == argv[1]` = 4660), which would result in the program reading from stdin. You can then clearly see it checking for `LETMEWIN\n`, so I entered this, and: 
+
+```shell
+fd@ubuntu:~$ ./fd 4660
+LETMEWIN
+good job :)
+mommy! I think I know what a file descriptor is!!
+
+```
 
 ## mistake
 The hint given is "hint: operator priority". Here's the exploitable .c file (mistake.c) from the target:
