@@ -180,4 +180,30 @@ Password OK
 Mommy, the operator priority always confuses me :(
 ```
 
+## blackjack
+```
+Hey! check out this C implementation of blackjack game!
+I found it online
+* http://cboard.cprogramming.com/c-programming/114023-simple-blackjack-program.html
 
+I like to give my flags to millionares.
+how much money you got?
+
+
+Running at : nc pwnable.kr 9009
+```
+When you connect via netcat, you get asked if you want to play. I said Y(es). 
+Based on the hint of "I like to give my flags to millionaires", I tried entering `$99999999999999999999999 ` as my bet. Surprisingly (or is it?), it let me bet that much. I won, and then my screen displayed:
+
+```shell
+YaY_I_AM_A_MILLIONARE_LOL
+
+
+Cash: $1410065908
+-------
+|S    |
+|  2  |
+|    S|
+-------
+```
+Was it really this easy? Yup. `YaY_I_AM_A_MILLIONARE_LOL` is, in fact, the flag.	
