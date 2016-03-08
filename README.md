@@ -65,14 +65,14 @@ if(fd=open("/home/mistake/password",O_RDONLY,0400) < 0)
 ``` 
 and
 ```c 
-if(!(len=read(fd,pw_buf,PW_LEN) > 0) 
+if(!(len=read(fd,pw_buf,PW_LEN) > 0))
 ```
 
 Because the first one will (if it can open the file) always assign 0 as the fd, and then the second line will open fd(0) for reading, rather than the actual file. 
 
 Therefore:
 ```c 
-if(!strncmp(pw_buf, pw_buf2, PW_LEN)
+if(!strncmp(pw_buf, pw_buf2, PW_LEN))
 ```
 is actually checking against stdin twice rather than stdin vs the password file. However, there's a catch.
 The second input (pw_buf) has each byte XOR'd by 1. So you can't just enter AAAAAAAAAA and AAAAAAAAAA as the passwords, as the second one will get XOR'd by 1 in each block.
