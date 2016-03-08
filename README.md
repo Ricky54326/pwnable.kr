@@ -37,6 +37,64 @@ mommy! I think I know what a file descriptor is!!
 
 ```
 
+
+## random
+"Daddy, teach me how to use random value in programming!"
+```c
+#include <stdio.h>
+
+int main(){
+        unsigned int random;
+        random = rand();        // random value!
+
+        unsigned int key=0;
+        scanf("%d", &key);
+
+        if( (key ^ random) == 0xdeadbeef ){
+                printf("Good!\n");
+                system("/bin/cat flag");
+                return 0;
+        }
+
+        printf("Wrong, maybe you should try 2^32 cases.\n");
+        return 0;
+}
+
+```
+This program, I can immediately tell (recalling from my noob C days) does not seed the RNG at all. Thus, `random()` returns the same result every single time. 
+
+To find out what that number is on this system, I copy random.c (the target) to /tmp, and edit it to dislpay the result of rand(): 
+replacing:
+```c
+        random = rand();        // random value!
+```
+
+with
+```c
+        random = rand();        // random value!
+        printf("rand: %d\n", random);
+```
+ then compiled using `gcc random.c`, followed by running the program with: `./a.out`. Receiving: `rand: 1804289383`. (hex: 0x6b8b4567)
+ 
+ I head back to ~ (`cd ~`), then run `./random`. 
+ There's one more catch, though. The password has to match 1804289383 when XOR'd with `0xdeadbeef`. To undo an XOR, you can simply XOR two of the other terms, like so:
+ 
+ `Pass ^ 0xDEADBEEF == 0xDEADBEEF ^ 6b8b4567(our hex'd version of the rand() result)`
+ And thus,
+ 
+ `Pass = 0xdeadbeef ^ 0x6b8b4567 = 0xb526fb88` (using wolframalpha)
+ 
+ Lastly, you'll need to convert that result back to decimal (3039230856) (as that's how integers are passed around as strings), and thus:
+ ```shell
+ random@ubuntu:~$ ./random
+3039230856
+Good!
+Mommy, I thought libc random is unpredictable...
+
+ ```
+ 
+
+
 ## mistake
 The hint given is "hint: operator priority". Here's the exploitable .c file (mistake.c) from the target:
 
