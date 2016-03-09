@@ -38,6 +38,29 @@ mommy! I think I know what a file descriptor is!!
 ```
 
 
+## flag
+```
+Papa brought me a packed present! let's open it.
+
+Download : http://pwnable.kr/bin/flag
+
+This is reversing task. all you need is binary
+```
+I download the binary, and open it up in IDA Pro (free) since they mention reversing. This area is actually one that I'm not that strong in, but I figured I would give it a shot anyways.
+
+I start skimming through the binary, realizing most of it is a bunch of unreadable hex and not much actual code. What's up with that? Then I notice an interesting line:
+
+![UPX?](https://github.com/Ricky54326/pwnable.kr/upx.png "UPX") I remember that UPX is a packer for executables, so I install the `upx-ucl` package (found from searching Google) on my Linux machine. Then, I unpack the binary like so: `upx -d flag`. I now open the new flag binary in IDA Pro once again. I start at the `main()` function, and notice the following few lines:
+
+![cs:flag?](https://github.com/Ricky54326/pwnable.kr/csflag.png "cs:flag")
+particularly: `cs:flag`. I double click on that to see what the data actually is in the data section, and:
+
+
+![flag?](https://github.com/Ricky54326/pwnable.kr/flag.png "flag")
+and... voila!
+`UPX...? sounds like a delivery service :)` is indeed the flag! 
+
+
 ## random
 "Daddy, teach me how to use random value in programming!"
 ```c
